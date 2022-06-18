@@ -1,0 +1,2400 @@
+{
+  "name" : "Splunk: Threat Hunting",
+  "type" : "Standard",
+  "panX" : 294.2044,
+  "panY" : -33.7738,
+  "logLevel" : "WARN",
+  "description" : "This playbook will search QRadar for indicators and return statistical resutls",
+  "priority" : 6,
+  "version" : "1.290",
+  "comment" : "Auto-Saved on Mon Mar 15 11:51:43 UTC 2021",
+  "jobList" : [ {
+    "id" : 222747,
+    "appCatalogItem" : {
+      "programName" : "Merge",
+      "displayName" : "Merge",
+      "programVersion" : "1.0.0"
+    },
+    "name" : "Merge Response",
+    "jobParameterList" : [ {
+      "appCatalogItemParameter" : {
+        "paramName" : "output_array"
+      },
+      "value" : "[{\"key\":\"response\",\"value\":\"#App:222749:found!String #App:222759:logger.content!String\"}]"
+    } ],
+    "locationLeft" : 2720.0,
+    "locationTop" : 350.0,
+    "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"response\",\"type\":\"String\"}]"
+  }, {
+    "id" : 222748,
+    "appCatalogItem" : {
+      "programName" : "If / Else",
+      "displayName" : "If / Else",
+      "programVersion" : "1.0.0"
+    },
+    "name" : "Result Count",
+    "jobParameterList" : [ {
+      "appCatalogItemParameter" : {
+        "paramName" : "match_case"
+      },
+      "value" : "false"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "operator"
+      },
+      "value" : "equals"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "operand_1"
+      },
+      "value" : "#App:222750:count!String"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "operand_2"
+      },
+      "value" : "0"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "as_numeric"
+      },
+      "value" : "true"
+    } ],
+    "locationLeft" : -200.0,
+    "locationTop" : 370.0
+  }, {
+    "id" : 222749,
+    "appCatalogItem" : {
+      "programName" : "TCPB - SetVariable v1.0",
+      "displayName" : "Set Variable",
+      "programVersion" : "1.0.14"
+    },
+    "name" : "No Tactical Intelligence",
+    "jobParameterList" : [ {
+      "appCatalogItemParameter" : {
+        "paramName" : "variable_mapping"
+      },
+      "value" : "[{\"key\":\"found\",\"value\":\"There is no tactical intelligence associated to this #Trigger:17891:trg.action.type!String\"}]"
+    } ],
+    "locationLeft" : -70.0,
+    "locationTop" : 330.0,
+    "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"found\",\"type\":\"String\"}]"
+  }, {
+    "id" : 222750,
+    "appCatalogItem" : {
+      "programName" : "94731ba01aa5e84f785c9de6b3423f16",
+      "displayName" : "Tactical Intelligence",
+      "programVersion" : "1.183.0",
+      "pipeRunLevel" : true
+    },
+    "name" : "Tactical Intelligence",
+    "jobParameterList" : [ {
+      "appCatalogItemParameter" : {
+        "paramName" : "Entity"
+      },
+      "value" : "#Trigger:17891:trg.action.entity!TCEntity"
+    } ],
+    "locationLeft" : -430.0,
+    "locationTop" : 370.0,
+    "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"File\",\"type\":\"StringArray\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"Address\",\"type\":\"StringArray\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"type\",\"type\":\"String\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"EmailAddress\",\"type\":\"StringArray\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"URL\",\"type\":\"StringArray\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"CIDR\",\"type\":\"StringArray\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"RegistryKey\",\"type\":\"StringArray\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"count\",\"type\":\"String\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"ASN\",\"type\":\"StringArray\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"Mutex\",\"type\":\"StringArray\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"Host\",\"type\":\"StringArray\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"UserAgent\",\"type\":\"StringArray\"}]"
+  }, {
+    "id" : 222751,
+    "appCatalogItem" : {
+      "programName" : "TCPB - JSON Pretty v1.0",
+      "displayName" : "JSON Pretty",
+      "programVersion" : "1.0.0"
+    },
+    "name" : "Format Response",
+    "jobParameterList" : [ {
+      "appCatalogItemParameter" : {
+        "paramName" : "indent"
+      },
+      "value" : "2"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "json_data"
+      },
+      "value" : "{ \"id\" : #App:222752:id!String, \"name\" : \"#App:222752:value!String\", \"type\" :  \"#App:222750:type!String\", \"owner\" : \"#Trigger:17891:trg.action.owner!String\", \"threat\" : \"#Trigger:17891:trg.action.rating!String\", \"confidence\" : \"#Trigger:17891:trg.action.confidence!String\", \"weblink\" : \"#App:222752:webLink!String\",  \"address\" : #App:222750:Address!StringArray, \"emailAddress\" : #App:222750:EmailAddress!StringArray, \"file\" : #App:222750:File!StringArray, \"host\" : #App:222750:Host!StringArray, \"url\" : #App:222750:URL!StringArray, \"asn\" : #App:222750:ASN!StringArray, \"cidr\" : #App:222750:CIDR!StringArray, \"mutex\" : #App:222750:Mutex!StringArray, \"registryKey\" : #App:222750:RegistryKey!StringArray, \"userAgent\" : #App:222750:UserAgent!StringArray }"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "sort_keys"
+      },
+      "value" : "false"
+    } ],
+    "locationLeft" : 130.0,
+    "locationTop" : 430.0,
+    "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"json.pretty\",\"type\":\"String\"}]"
+  }, {
+    "id" : 222752,
+    "appCatalogItem" : {
+      "programName" : "TCPB - JMESPath v3.0",
+      "displayName" : "JMESPath",
+      "programVersion" : "3.0.0"
+    },
+    "name" : "Extract Entitiy",
+    "jobParameterList" : [ {
+      "appCatalogItemParameter" : {
+        "paramName" : "strip_quotes"
+      },
+      "value" : "true"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "json_data"
+      },
+      "value" : "#Trigger:17891:trg.action.entity!TCEntity"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "string_expressions"
+      },
+      "value" : "[{\"key\":\"id\",\"value\":\"id\"},{\"key\":\"type\",\"value\":\"type\"},{\"key\":\"value\",\"value\":\"value\"},{\"key\":\"ownerName\",\"value\":\"ownerName\"},{\"key\":\"confidence\",\"value\":\"confidence\"},{\"key\":\"rating\",\"value\":\"rating\"},{\"key\":\"threatAssessConfidence\",\"value\":\"threatAssessConfidence\"},{\"key\":\"threatAssessRating\",\"value\":\"threatAssessRating\"},{\"key\":\"dateAdded\",\"value\":\"dateAdded\"},{\"key\":\"dateLastModified\",\"value\":\"dateLastModified\"},{\"key\":\"webLink\",\"value\":\"webLink\"}]"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "string_array_expressions"
+      },
+      "value" : "[]"
+    } ],
+    "locationLeft" : -70.0,
+    "locationTop" : 430.0,
+    "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"id\",\"type\":\"String\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"value\",\"type\":\"String\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"webLink\",\"type\":\"String\"}]"
+  }, {
+    "id" : 222753,
+    "appCatalogItem" : {
+      "programName" : "TCPB - HTTP Client v2.0",
+      "displayName" : "HTTP Client",
+      "programVersion" : "2.0.20"
+    },
+    "name" : "Check Collection",
+    "jobParameterList" : [ {
+      "appCatalogItemParameter" : {
+        "paramName" : "exclude_null_parameters"
+      },
+      "value" : "false"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "advanced"
+      },
+      "value" : "[]"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "http_method"
+      },
+      "value" : "GET"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "verify_ssl"
+      },
+      "value" : "false"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "multipart"
+      },
+      "value" : "[]"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "body"
+      }
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "headers"
+      },
+      "value" : "[{\"key\":\"Authorization\",\"value\":\"Bearer ${ORGANIZATION:KEYCHAIN:Splunk Authentication Token}\"}]"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "params"
+      },
+      "value" : "[]"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "fail_on_error"
+      },
+      "value" : "false"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "proxies_enabled"
+      },
+      "value" : "false"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "urlencode_body"
+      },
+      "value" : "false"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "url"
+      },
+      "value" : "${ORGANIZATION:TEXT:Splunk URL}:8089/servicesNS/nobody/#App:222758:collection!String/storage/collections/config/#App:222758:collectionName!String"
+    } ],
+    "locationLeft" : 550.0,
+    "locationTop" : 480.0,
+    "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"http.status_code\",\"type\":\"String\"}]",
+    "layoutRequiredInputParams" : "[\"url\"]",
+    "layoutDisplayedInputParams" : "[\"url\",\"http_method\",\"params\",\"exclude_null_parameters\",\"headers\",\"advanced\",\"fail_on_error\",\"verify_ssl\",\"proxies_enabled\"]",
+    "playbookRetryDelayMinutes" : 1,
+    "playbookRetryMaxRetries" : 5
+  }, {
+    "id" : 222754,
+    "appCatalogItem" : {
+      "programName" : "If / Else",
+      "displayName" : "If / Else",
+      "programVersion" : "1.0.0"
+    },
+    "name" : "Status Code",
+    "jobParameterList" : [ {
+      "appCatalogItemParameter" : {
+        "paramName" : "as_numeric"
+      },
+      "value" : "true"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "operand_1"
+      },
+      "value" : "#App:222753:http.status_code!String"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "operand_2"
+      },
+      "value" : "200"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "operator"
+      },
+      "value" : "equals"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "match_case"
+      },
+      "value" : "false"
+    } ],
+    "locationLeft" : 780.0,
+    "locationTop" : 480.0
+  }, {
+    "id" : 222755,
+    "appCatalogItem" : {
+      "programName" : "TCPB - HTTP Client v2.0",
+      "displayName" : "HTTP Client",
+      "programVersion" : "2.0.20"
+    },
+    "name" : "Add record",
+    "jobParameterList" : [ {
+      "appCatalogItemParameter" : {
+        "paramName" : "fail_on_error"
+      },
+      "value" : "false"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "body"
+      },
+      "value" : "#App:222751:json.pretty!String"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "url"
+      },
+      "value" : "${ORGANIZATION:TEXT:Splunk URL}:8089/servicesNS/nobody/#App:222758:collection!String/storage/collections/data/#App:222758:collectionName!String"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "proxies_enabled"
+      },
+      "value" : "false"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "exclude_null_parameters"
+      },
+      "value" : "false"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "advanced"
+      },
+      "value" : "[{\"key\":\"Authorization\",\"value\":\"Bearer ${ORGANIZATION:KEYCHAIN:Splunk Authentication Token}\"}]"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "verify_ssl"
+      },
+      "value" : "false"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "multipart"
+      },
+      "value" : "[]"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "headers"
+      },
+      "value" : "[{\"key\":\"Authorization\",\"value\":\"Bearer ${ORGANIZATION:KEYCHAIN:Splunk Authentication Token}\"},{\"key\":\"Content-Type\",\"value\":\"application/json\"}]"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "http_method"
+      },
+      "value" : "POST"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "params"
+      },
+      "value" : "[]"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "urlencode_body"
+      },
+      "value" : "false"
+    } ],
+    "locationLeft" : 1280.0,
+    "locationTop" : 490.0,
+    "layoutRequiredInputParams" : "[\"url\"]",
+    "layoutDisplayedInputParams" : "[\"url\",\"http_method\",\"params\",\"exclude_null_parameters\",\"headers\",\"body\",\"urlencode_body\",\"multipart\",\"advanced\",\"fail_on_error\",\"verify_ssl\",\"proxies_enabled\"]",
+    "playbookRetryDelayMinutes" : 1,
+    "playbookRetryMaxRetries" : 5
+  }, {
+    "id" : 222756,
+    "appCatalogItem" : {
+      "programName" : "TCPB - HTTP Client v2.0",
+      "displayName" : "HTTP Client",
+      "programVersion" : "2.0.20"
+    },
+    "name" : "Create Lookup",
+    "jobParameterList" : [ {
+      "appCatalogItemParameter" : {
+        "paramName" : "headers"
+      },
+      "value" : "[{\"key\":\"Authorization\",\"value\":\"Bearer ${ORGANIZATION:KEYCHAIN:Splunk Authentication Token}\"},{\"key\":\"Content-Type\",\"value\":\"application/x-www-form-urlencoded\"}]"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "multipart"
+      },
+      "value" : "[{\"key\":\"field.id\",\"value\":\"integer\"},{\"key\":\"field.weblink\",\"value\":\"string\"},{\"key\":\"field.name\",\"value\":\"string\"},{\"key\":\"field.address\",\"value\":\"array\"},{\"key\":\"field.emailAddress\",\"value\":\"array\"},{\"key\":\"field.file\",\"value\":\"array\"},{\"key\":\"field.host\",\"value\":\"array\"},{\"key\":\"field.url\",\"value\":\"array\"},{\"key\":\"field.asn\",\"value\":\"array\"},{\"key\":\"field.cidr\",\"value\":\"array\"},{\"key\":\"field.mutex\",\"value\":\"array\"},{\"key\":\"field.registryKey\",\"value\":\"array\"},{\"key\":\"field.userAgent\",\"value\":\"array\"},{\"key\":\"name\",\"value\":\"#App:222758:collectionName!String\"},{\"key\":\"field.type\",\"value\":\"string\"},{\"key\":\"field.owner\",\"value\":\"string\"},{\"key\":\"field.confidence\",\"value\":\"integer\"},{\"key\":\"field.threat\",\"value\":\"integer\"}]"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "advanced"
+      },
+      "value" : "[{\"key\":\"Authorization\",\"value\":\"Bearer ${ORGANIZATION:KEYCHAIN:Splunk Authentication Token}\"}]"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "body"
+      },
+      "value" : ""
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "verify_ssl"
+      },
+      "value" : "false"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "urlencode_body"
+      },
+      "value" : "false"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "fail_on_error"
+      },
+      "value" : "false"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "url"
+      },
+      "value" : "${ORGANIZATION:TEXT:Splunk URL}:8089/servicesNS/nobody/#App:222758:collection!String/storage/collections/config/"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "exclude_null_parameters"
+      },
+      "value" : "false"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "http_method"
+      },
+      "value" : "POST"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "params"
+      },
+      "value" : "[]"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "proxies_enabled"
+      },
+      "value" : "false"
+    } ],
+    "locationLeft" : 920.0,
+    "locationTop" : 600.0,
+    "layoutRequiredInputParams" : "[\"url\"]",
+    "layoutDisplayedInputParams" : "[\"url\",\"http_method\",\"params\",\"exclude_null_parameters\",\"headers\",\"body\",\"urlencode_body\",\"multipart\",\"advanced\",\"fail_on_error\",\"verify_ssl\",\"proxies_enabled\"]",
+    "playbookRetryDelayMinutes" : 1,
+    "playbookRetryMaxRetries" : 5
+  }, {
+    "id" : 222757,
+    "appCatalogItem" : {
+      "programName" : "Merge",
+      "displayName" : "Merge",
+      "programVersion" : "1.0.0"
+    },
+    "name" : "Merge",
+    "jobParameterList" : [ {
+      "appCatalogItemParameter" : {
+        "paramName" : "output_array"
+      },
+      "value" : "[]"
+    } ],
+    "locationLeft" : 1140.0,
+    "locationTop" : 490.0
+  }, {
+    "id" : 222758,
+    "appCatalogItem" : {
+      "programName" : "TCPB - SetVariable v1.0",
+      "displayName" : "Set Variable",
+      "programVersion" : "1.0.14"
+    },
+    "name" : "Set Variables",
+    "jobParameterList" : [ {
+      "appCatalogItemParameter" : {
+        "paramName" : "variable_mapping"
+      },
+      "value" : "[{\"key\":\"collection\",\"value\":\"TA-threatconnect\"},{\"key\":\"collectionName\",\"value\":\"investigate\"},{\"key\":\"macroSearch\",\"value\":\"`investigate(1d,#App:222752:id!String)`\"},{\"key\":\"numberOfResults\",\"value\":\"10\"}]"
+    } ],
+    "locationLeft" : 340.0,
+    "locationTop" : 480.0,
+    "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"collectionName\",\"type\":\"String\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"numberOfResults\",\"type\":\"String\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"collection\",\"type\":\"String\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"macroSearch\",\"type\":\"String\"}]"
+  }, {
+    "id" : 222759,
+    "appCatalogItem" : {
+      "programName" : "Logger",
+      "displayName" : "Logger",
+      "programVersion" : "1.0.0"
+    },
+    "name" : "Logger",
+    "jobParameterList" : [ {
+      "appCatalogItemParameter" : {
+        "paramName" : "logging"
+      },
+      "value" : "INFO"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "log_message"
+      },
+      "value" : "<tr><td>#App:222760:resultCount!String results found.   Click <a href=\"#Trigger:17891:trg.action.weblink!String\n\">here</a> to view.</td></tr>"
+    } ],
+    "locationLeft" : 2480.0,
+    "locationTop" : 490.0,
+    "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"logger.content\",\"type\":\"String\"}]"
+  }, {
+    "id" : 222760,
+    "appCatalogItem" : {
+      "programName" : "79be259b2d6cfbb450a77ae7f8b0f3af",
+      "displayName" : "Splunk Investigate",
+      "programVersion" : "1.100.0",
+      "pipeRunLevel" : true
+    },
+    "name" : "Splunk Investigate",
+    "jobParameterList" : [ {
+      "appCatalogItemParameter" : {
+        "paramName" : "delay"
+      },
+      "value" : "10"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "splunkSearch"
+      },
+      "value" : "#App:222758:macroSearch!String"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "duration"
+      },
+      "value" : "4h"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "repeat"
+      },
+      "value" : "100"
+    } ],
+    "locationLeft" : 1480.0,
+    "locationTop" : 490.0,
+    "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"splunk.search.response.result\",\"type\":\"String\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"resultCount\",\"type\":\"String\"}]"
+  }, {
+    "id" : 222761,
+    "appCatalogItem" : {
+      "programName" : "TCPB - JsonPath v1.0",
+      "displayName" : "Json Path",
+      "programVersion" : "2.0.9"
+    },
+    "name" : "Extract Results",
+    "jobParameterList" : [ {
+      "appCatalogItemParameter" : {
+        "paramName" : "column_mapping"
+      },
+      "value" : "[{\"key\":\"events\",\"value\":\".results[:#App:222758:numberOfResults!String].[\\\"Component\\\",\\\"Source\\\",\\\"Target\\\",\\\"Port\\\",\\\"Destination\\\",\\\"Event\\\"]\"}]"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "json_content"
+      },
+      "value" : "#App:222760:splunk.search.response.result!String"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "null_missing_leaf"
+      },
+      "value" : "false"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "column_mapping_as_string"
+      },
+      "value" : "[]"
+    } ],
+    "locationLeft" : 1680.0,
+    "locationTop" : 490.0,
+    "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"events\",\"type\":\"StringArray\"}]"
+  }, {
+    "id" : 222762,
+    "appCatalogItem" : {
+      "programName" : "TCPB - JoinArray v1.0",
+      "displayName" : "Join Array",
+      "programVersion" : "1.0.14"
+    },
+    "name" : "Convert Results",
+    "jobParameterList" : [ {
+      "appCatalogItemParameter" : {
+        "paramName" : "delimiter"
+      },
+      "value" : ","
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "array_mapping"
+      },
+      "value" : "[{\"key\":\"sEvents\",\"value\":\"#App:222761:events!StringArray\"}]"
+    } ],
+    "locationLeft" : 1880.0,
+    "locationTop" : 490.0,
+    "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"sEvents\",\"type\":\"String\"}]"
+  }, {
+    "id" : 222763,
+    "appCatalogItem" : {
+      "programName" : "95ca51ffd4ee194e26b19b5a8dafa732",
+      "displayName" : "Convert to MarkDown",
+      "programVersion" : "1.15.0",
+      "pipeRunLevel" : true
+    },
+    "name" : "Convert to MarkDown",
+    "jobParameterList" : [ {
+      "appCatalogItemParameter" : {
+        "paramName" : "Data"
+      },
+      "value" : "#App:222762:sEvents!String"
+    } ],
+    "locationLeft" : 2080.0,
+    "locationTop" : 490.0,
+    "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"result\",\"type\":\"String\"}]"
+  }, {
+    "id" : 222764,
+    "appCatalogItem" : {
+      "programName" : "Add Attribute",
+      "displayName" : "Create ThreatConnect Attribute",
+      "programVersion" : "1.0.0"
+    },
+    "name" : "Create Attribute",
+    "jobParameterList" : [ {
+      "appCatalogItemParameter" : {
+        "paramName" : "update"
+      },
+      "value" : "false"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "indicator_name"
+      },
+      "value" : "#Trigger:17891:trg.action.entity!TCEntity"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "attribute_type"
+      },
+      "value" : "SIEM Event"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "attribute_content"
+      },
+      "value" : "There were #App:222760:resultCount!String results of which the top #App:222758:numberOfResults!String were selected from Splunk:\n\n#App:222763:result!String"
+    } ],
+    "locationLeft" : 2280.0,
+    "locationTop" : 490.0
+  }, {
+    "id" : 222765,
+    "appCatalogItem" : {
+      "programName" : "TCPB - HTTP Client v2.0",
+      "displayName" : "HTTP Client",
+      "programVersion" : "2.0.20"
+    },
+    "name" : "Delete Record",
+    "jobParameterList" : [ {
+      "appCatalogItemParameter" : {
+        "paramName" : "body"
+      },
+      "value" : "#App:222751:json.pretty!String"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "urlencode_body"
+      },
+      "value" : "false"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "proxies_enabled"
+      },
+      "value" : "false"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "headers"
+      },
+      "value" : "[{\"key\":\"Authorization\",\"value\":\"Bearer ${ORGANIZATION:KEYCHAIN:Splunk Authentication Token}\"},{\"key\":\"Content-Type\",\"value\":\"application/json\"}]"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "exclude_null_parameters"
+      },
+      "value" : "false"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "advanced"
+      },
+      "value" : "[{\"key\":\"Authorization\",\"value\":\"Bearer ${ORGANIZATION:KEYCHAIN:Splunk Authentication Token}\"}]"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "fail_on_error"
+      },
+      "value" : "false"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "params"
+      },
+      "value" : "[]"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "verify_ssl"
+      },
+      "value" : "true"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "url"
+      },
+      "value" : "https://splunk.threatconnect.solutions:18089/servicesNS/nobody/#App:222758:collection!String/storage/collections/data/#App:222758:collectionName!String/?query={\"id\":#App:222752:id!String}"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "multipart"
+      },
+      "value" : "[]"
+    }, {
+      "appCatalogItemParameter" : {
+        "paramName" : "http_method"
+      },
+      "value" : "DELETE"
+    } ],
+    "locationLeft" : 2690.0,
+    "locationTop" : 490.0,
+    "layoutRequiredInputParams" : "[\"url\"]",
+    "layoutDisplayedInputParams" : "[\"url\",\"http_method\",\"params\",\"exclude_null_parameters\",\"headers\",\"body\",\"urlencode_body\",\"advanced\",\"fail_on_error\",\"verify_ssl\",\"proxies_enabled\"]",
+    "playbookRetryDelayMinutes" : 1,
+    "playbookRetryMaxRetries" : 5
+  } ],
+  "playbookConnectionList" : [ {
+    "type" : "Pass",
+    "isCircularOnTarget" : false,
+    "sourceJobId" : 222748,
+    "targetJobId" : 222749
+  }, {
+    "type" : "Pass",
+    "isCircularOnTarget" : false,
+    "sourceJobId" : 222749,
+    "targetJobId" : 222747
+  }, {
+    "type" : "Pass",
+    "isCircularOnTarget" : false,
+    "targetJobId" : 222750,
+    "sourceTriggerId" : 17891
+  }, {
+    "type" : "Pass",
+    "isCircularOnTarget" : false,
+    "sourceJobId" : 222750,
+    "targetJobId" : 222748
+  }, {
+    "type" : "Fail",
+    "isCircularOnTarget" : false,
+    "sourceJobId" : 222748,
+    "targetJobId" : 222752
+  }, {
+    "type" : "Pass",
+    "isCircularOnTarget" : false,
+    "sourceJobId" : 222752,
+    "targetJobId" : 222751
+  }, {
+    "type" : "Pass",
+    "isCircularOnTarget" : false,
+    "sourceJobId" : 222751,
+    "targetJobId" : 222747
+  }, {
+    "type" : "Pass",
+    "isCircularOnTarget" : false,
+    "sourceJobId" : 222753,
+    "targetJobId" : 222754
+  }, {
+    "type" : "Fail",
+    "isCircularOnTarget" : false,
+    "sourceJobId" : 222754,
+    "targetJobId" : 222756
+  }, {
+    "type" : "Pass",
+    "isCircularOnTarget" : false,
+    "sourceJobId" : 222754,
+    "targetJobId" : 222757
+  }, {
+    "type" : "Pass",
+    "isCircularOnTarget" : false,
+    "sourceJobId" : 222757,
+    "targetJobId" : 222755
+  }, {
+    "type" : "Pass",
+    "isCircularOnTarget" : false,
+    "sourceJobId" : 222756,
+    "targetJobId" : 222757
+  }, {
+    "type" : "Pass",
+    "isCircularOnTarget" : false,
+    "sourceJobId" : 222751,
+    "targetJobId" : 222758
+  }, {
+    "type" : "Pass",
+    "isCircularOnTarget" : false,
+    "sourceJobId" : 222758,
+    "targetJobId" : 222753
+  }, {
+    "type" : "Pass",
+    "isCircularOnTarget" : true,
+    "sourceJobId" : 222747,
+    "targetTriggerId" : 17891
+  }, {
+    "type" : "Pass",
+    "isCircularOnTarget" : false,
+    "sourceJobId" : 222759,
+    "targetJobId" : 222747
+  }, {
+    "type" : "Pass",
+    "isCircularOnTarget" : false,
+    "sourceJobId" : 222755,
+    "targetJobId" : 222760
+  }, {
+    "type" : "Pass",
+    "isCircularOnTarget" : false,
+    "sourceJobId" : 222760,
+    "targetJobId" : 222761
+  }, {
+    "type" : "Pass",
+    "isCircularOnTarget" : false,
+    "sourceJobId" : 222761,
+    "targetJobId" : 222762
+  }, {
+    "type" : "Pass",
+    "isCircularOnTarget" : false,
+    "sourceJobId" : 222762,
+    "targetJobId" : 222763
+  }, {
+    "type" : "Pass",
+    "isCircularOnTarget" : false,
+    "sourceJobId" : 222763,
+    "targetJobId" : 222764
+  }, {
+    "type" : "Pass",
+    "isCircularOnTarget" : false,
+    "sourceJobId" : 222764,
+    "targetJobId" : 222759
+  }, {
+    "type" : "Pass",
+    "isCircularOnTarget" : false,
+    "sourceJobId" : 222759,
+    "targetJobId" : 222765
+  } ],
+  "playbookTriggerList" : [ {
+    "id" : 17891,
+    "name" : "Threat Hunting (Splunk)",
+    "type" : "UserAction",
+    "eventType" : "External",
+    "locationLeft" : 670.0,
+    "locationTop" : 200.0,
+    "httpResponseHeader" : "[]",
+    "httpResponseBody" : "#App:222747:response!String",
+    "anyOrg" : true,
+    "userActionTypes" : "Threat,Adversary,Incident,Campaign,Document,Email,Report,Intrusion Set,Signature",
+    "overrideRunAsUser" : true,
+    "renderBodyAsTip" : true,
+    "playbookTriggerFilterList" : [ ],
+    "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"trg.action.rating\",\"type\":\"String\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"trg.action.confidence\",\"type\":\"String\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"trg.action.entity\",\"type\":\"TCEntity\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"trg.action.type\",\"type\":\"String\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"trg.action.owner\",\"type\":\"String\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"trg.action.weblink\",\"type\":\"String\"}]",
+    "cacheMinutes" : 120,
+    "cacheParams" : "{\"includeMethod\":false,\"includeBody\":false,\"queryParams\":[],\"headerNames\":[]}"
+  } ],
+  "playbookLabels" : [ ],
+  "exportablePipes" : [ {
+    "definitionVersion" : "95ca51ffd4ee194e26b19b5a8dafa732",
+    "name" : "Convert to MarkDown",
+    "type" : "Pipe",
+    "panX" : 20.0,
+    "panY" : 20.0,
+    "logLevel" : "WARN",
+    "description" : "Convert results to MarkDown",
+    "version" : "1.16",
+    "comment" : "Auto-Saved on Fri Feb 05 11:02:15 UTC 2021",
+    "jobList" : [ {
+      "id" : 195626,
+      "appCatalogItem" : {
+        "programName" : "Find / Replace",
+        "displayName" : "Find and Replace",
+        "programVersion" : "1.0.0"
+      },
+      "name" : "Add Line Breaks",
+      "jobParameterList" : [ {
+        "appCatalogItemParameter" : {
+          "paramName" : "as_regex"
+        },
+        "value" : "true"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "input_text"
+        },
+        "value" : "#Trigger:15743:Data!String"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "replace_regex"
+        },
+        "value" : ",,----,,"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "match_case"
+        },
+        "value" : "false"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "find_regex"
+        },
+        "value" : "\\}\\,\\{"
+      } ],
+      "locationLeft" : 640.0,
+      "locationTop" : 300.0,
+      "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"find_replace.output\",\"type\":\"String\"}]"
+    }, {
+      "id" : 195627,
+      "appCatalogItem" : {
+        "programName" : "Find / Replace",
+        "displayName" : "Find and Replace",
+        "programVersion" : "1.0.0"
+      },
+      "name" : "Convert to multiple lines",
+      "jobParameterList" : [ {
+        "appCatalogItemParameter" : {
+          "paramName" : "as_regex"
+        },
+        "value" : "false"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "match_case"
+        },
+        "value" : "false"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "find_regex"
+        },
+        "value" : ","
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "input_text"
+        },
+        "value" : "#App:195626:find_replace.output!String"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "replace_regex"
+        },
+        "value" : ",\n\n\n  ,"
+      } ],
+      "locationLeft" : 640.0,
+      "locationTop" : 410.0,
+      "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"find_replace.output\",\"type\":\"String\"}]"
+    }, {
+      "id" : 195628,
+      "appCatalogItem" : {
+        "programName" : "Find / Replace",
+        "displayName" : "Find and Replace",
+        "programVersion" : "1.0.0"
+      },
+      "name" : "Convert to markdown",
+      "jobParameterList" : [ {
+        "appCatalogItemParameter" : {
+          "paramName" : "as_regex"
+        },
+        "value" : "true"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "find_regex"
+        },
+        "value" : "\"(\\w+)\":\\s?(.*)[\"|,]"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "match_case"
+        },
+        "value" : "false"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "input_text"
+        },
+        "value" : "#App:195627:find_replace.output!String"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "replace_regex"
+        },
+        "value" : "**$1:** $2"
+      } ],
+      "locationLeft" : 640.0,
+      "locationTop" : 520.0,
+      "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"find_replace.output\",\"type\":\"String\"}]"
+    }, {
+      "id" : 195629,
+      "appCatalogItem" : {
+        "programName" : "Find / Replace",
+        "displayName" : "Find and Replace",
+        "programVersion" : "1.0.0"
+      },
+      "name" : "Cleanup",
+      "jobParameterList" : [ {
+        "appCatalogItemParameter" : {
+          "paramName" : "input_text"
+        },
+        "value" : "#App:195628:find_replace.output!String"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "replace_regex"
+        }
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "find_regex"
+        },
+        "value" : "\\[\\{|\\}\\]|\\,|\\\"|\\\\"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "match_case"
+        },
+        "value" : "false"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "as_regex"
+        },
+        "value" : "true"
+      } ],
+      "locationLeft" : 640.0,
+      "locationTop" : 630.0,
+      "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"find_replace.output\",\"type\":\"String\"}]"
+    }, {
+      "id" : 195630,
+      "appCatalogItem" : {
+        "programName" : "Find / Replace",
+        "displayName" : "Find and Replace",
+        "programVersion" : "1.0.0"
+      },
+      "name" : "Remove object identifier",
+      "jobParameterList" : [ {
+        "appCatalogItemParameter" : {
+          "paramName" : "match_case"
+        },
+        "value" : "false"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "as_regex"
+        },
+        "value" : "true"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "replace_regex"
+        },
+        "value" : ""
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "find_regex"
+        },
+        "value" : "\\{|\\}"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "input_text"
+        },
+        "value" : "#App:195629:find_replace.output!String"
+      } ],
+      "locationLeft" : 640.0,
+      "locationTop" : 750.0,
+      "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"find_replace.output\",\"type\":\"String\"}]"
+    } ],
+    "playbookConnectionList" : [ {
+      "type" : "Pass",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 195626,
+      "targetJobId" : 195627
+    }, {
+      "type" : "Pass",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 195627,
+      "targetJobId" : 195628
+    }, {
+      "type" : "Pass",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 195628,
+      "targetJobId" : 195629
+    }, {
+      "type" : "Pass",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 195629,
+      "targetJobId" : 195630
+    }, {
+      "type" : "Pass",
+      "isCircularOnTarget" : false,
+      "targetJobId" : 195626,
+      "sourceTriggerId" : 15743
+    }, {
+      "type" : "Pass",
+      "isCircularOnTarget" : true,
+      "sourceJobId" : 195630,
+      "targetTriggerId" : 15743
+    } ],
+    "playbookTriggerList" : [ {
+      "id" : 15743,
+      "name" : "Component Trigger",
+      "type" : "PipeConfig",
+      "eventType" : "External",
+      "locationLeft" : 910.0,
+      "locationTop" : 120.0,
+      "anyOrg" : true,
+      "playbookTriggerFilterList" : [ ],
+      "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"Data\",\"type\":\"String\"}]",
+      "pipeInputParams" : "[{\"label\":\"$string\",\"dataType\":\"String\",\"playbookDataType\":\"String\",\"required\":false,\"name\":\"Data\",\"encrypted\":false,\"hidden\":false,\"hasDollarVariables\":false,\"playbookVariable\":false,\"validValuesList\":[\"${TEXT}\",\"${KEYCHAIN}\"]}]",
+      "pipeOutputParams" : "[{\"key\":\"result\",\"value\":\"#App:195630:find_replace.output!String \",\"displayValue\":\"#App:195630:find_replace.output!String \"}]"
+    } ],
+    "playbookLabels" : [ ]
+  }, {
+    "definitionVersion" : "79be259b2d6cfbb450a77ae7f8b0f3af",
+    "name" : "Splunk Investigate",
+    "type" : "Pipe",
+    "panX" : -571.0,
+    "panY" : -155.0,
+    "logLevel" : "WARN",
+    "description" : "This component will allow a user to create a custom Splunk Processing Language (SPL) search in Splunk. The component will then do some light formatting of the JSON response and expose it as an output variable to be used by downstream apps. Additionally, the parsed Search ID and HTTP Status Code are exposed as an output variables.",
+    "version" : "1.101",
+    "comment" : "Auto-Saved on Thu Mar 11 13:07:58 UTC 2021",
+    "jobList" : [ {
+      "id" : 222734,
+      "appCatalogItem" : {
+        "programName" : "TCPB - HTTP Client v2.0",
+        "displayName" : "HTTP Client",
+        "programVersion" : "2.0.20"
+      },
+      "name" : "Post Search To Splunk",
+      "jobParameterList" : [ {
+        "appCatalogItemParameter" : {
+          "paramName" : "http_method"
+        },
+        "value" : "POST"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "exclude_null_parameters"
+        },
+        "value" : "false"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "params"
+        },
+        "value" : "[{\"key\":\"output_mode\",\"value\":\"json\"}]"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "advanced"
+        },
+        "value" : "[]"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "fail_on_error"
+        },
+        "value" : "false"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "headers"
+        },
+        "value" : "[{\"key\":\"Accept\",\"value\":\"application/json, text/plain, */*\"},{\"key\":\"Content-Type\",\"value\":\"application/json;charset\\u003dutf-8\"},{\"key\":\"Authorization\",\"value\":\"Bearer ${ORGANIZATION:KEYCHAIN:Splunk Authentication Token}\"}]"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "body"
+        },
+        "value" : "search=search #Trigger:17890:splunkSearch!String"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "url"
+        },
+        "value" : "${ORGANIZATION:TEXT:Splunk URL}:8089/servicesNS/${ORGANIZATION:TEXT:Splunk User}/TA-threatconnect/search/jobs"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "proxies_enabled"
+        },
+        "value" : "false"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "urlencode_body"
+        },
+        "value" : "false"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "verify_ssl"
+        },
+        "value" : "false"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "multipart"
+        },
+        "value" : "[]"
+      } ],
+      "locationLeft" : 690.0,
+      "locationTop" : 410.0,
+      "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"http.content\",\"type\":\"String\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"http.status_code\",\"type\":\"String\"}]",
+      "layoutRequiredInputParams" : "[\"url\"]",
+      "layoutDisplayedInputParams" : "[\"url\",\"http_method\",\"params\",\"exclude_null_parameters\",\"headers\",\"body\",\"urlencode_body\",\"multipart\",\"advanced\",\"fail_on_error\",\"verify_ssl\",\"proxies_enabled\"]",
+      "playbookRetryDelayMinutes" : 1,
+      "playbookRetryMaxRetries" : 5
+    }, {
+      "id" : 222735,
+      "appCatalogItem" : {
+        "programName" : "TCPB - JMESPath v2.0",
+        "displayName" : "JMESPath",
+        "programVersion" : "2.0.8"
+      },
+      "name" : "Parse Search ID",
+      "jobParameterList" : [ {
+        "appCatalogItemParameter" : {
+          "paramName" : "string_array_expressions"
+        },
+        "value" : "[]"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "string_expressions"
+        },
+        "value" : "[{\"key\":\"splunk.searchID\",\"value\":\"sid\"}]"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "strip_quotes"
+        },
+        "value" : "true"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "json_data"
+        },
+        "value" : "#App:222734:http.content!String"
+      } ],
+      "locationLeft" : 910.0,
+      "locationTop" : 410.0,
+      "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"splunk.searchID\",\"type\":\"String\"}]"
+    }, {
+      "id" : 222736,
+      "appCatalogItem" : {
+        "programName" : "TCPB - FillArray v1.0",
+        "displayName" : "Fill Array",
+        "programVersion" : "1.0.14"
+      },
+      "name" : "Create Array",
+      "jobParameterList" : [ {
+        "appCatalogItemParameter" : {
+          "paramName" : "value"
+        },
+        "value" : "1"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "length"
+        },
+        "value" : "#Trigger:17890:repeat!String"
+      } ],
+      "locationLeft" : 1130.0,
+      "locationTop" : 410.0,
+      "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"array\",\"type\":\"StringArray\"}]"
+    }, {
+      "id" : 222737,
+      "appCatalogItem" : {
+        "programName" : "If / Else",
+        "displayName" : "If / Else",
+        "programVersion" : "1.0.0"
+      },
+      "name" : "Complete?",
+      "jobParameterList" : [ {
+        "appCatalogItemParameter" : {
+          "paramName" : "as_numeric"
+        },
+        "value" : "false"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "match_case"
+        },
+        "value" : "false"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "operand_2"
+        },
+        "value" : "true"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "operand_1"
+        },
+        "value" : "#App:222741:isDone!String"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "operator"
+        },
+        "value" : "equals"
+      } ],
+      "locationLeft" : 1590.0,
+      "locationTop" : 690.0
+    }, {
+      "id" : 222738,
+      "appCatalogItem" : {
+        "programName" : "Iterator",
+        "displayName" : "Iterator",
+        "programVersion" : "1.0.0"
+      },
+      "name" : "Results Iterator",
+      "jobParameterList" : [ {
+        "appCatalogItemParameter" : {
+          "paramName" : "array_inputs"
+        },
+        "value" : "[{\"key\":\"Loop\",\"value\":\"#App:222736:array!StringArray\"}]"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "array_outputs"
+        },
+        "value" : "[]"
+      } ],
+      "locationLeft" : 1350.0,
+      "locationTop" : 410.0,
+      "layoutRequiredInputParams" : "[\"array_inputs\"]",
+      "layoutDisplayedInputParams" : "[\"array_inputs\",\"array_outputs\"]"
+    }, {
+      "id" : 222739,
+      "appCatalogItem" : {
+        "programName" : "Delay",
+        "displayName" : "Delay",
+        "programVersion" : "1.0.0"
+      },
+      "name" : "Delay",
+      "jobParameterList" : [ {
+        "appCatalogItemParameter" : {
+          "paramName" : "seconds"
+        },
+        "value" : "#Trigger:17890:delay!String"
+      } ],
+      "locationLeft" : 920.0,
+      "locationTop" : 700.0
+    }, {
+      "id" : 222740,
+      "appCatalogItem" : {
+        "programName" : "TCPB - HTTP Client v2.0",
+        "displayName" : "HTTP Client",
+        "programVersion" : "2.0.20"
+      },
+      "name" : "Check Search Status",
+      "jobParameterList" : [ {
+        "appCatalogItemParameter" : {
+          "paramName" : "urlencode_body"
+        },
+        "value" : "false"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "multipart"
+        },
+        "value" : "[]"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "fail_on_error"
+        },
+        "value" : "true"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "url"
+        },
+        "value" : "${ORGANIZATION:TEXT:Splunk URL}:8089/servicesNS/${ORGANIZATION:TEXT:Splunk User}/TA-threatconnect/search/jobs"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "params"
+        },
+        "value" : "[{\"key\":\"output_mode\",\"value\":\"json\"}]"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "verify_ssl"
+        },
+        "value" : "false"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "exclude_null_parameters"
+        },
+        "value" : "false"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "advanced"
+        },
+        "value" : "[]"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "http_method"
+        },
+        "value" : "GET"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "proxies_enabled"
+        },
+        "value" : "false"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "headers"
+        },
+        "value" : "[{\"key\":\"Accept\",\"value\":\"application/json, text/plain, */*\"},{\"key\":\"Content-Type\",\"value\":\"application/json;charset\\u003dutf-8\"},{\"key\":\"Authorization\",\"value\":\"Bearer ${ORGANIZATION:KEYCHAIN:Splunk Authentication Token}\"}]"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "body"
+        }
+      } ],
+      "locationLeft" : 1140.0,
+      "locationTop" : 700.0,
+      "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"http.content\",\"type\":\"String\"}]",
+      "layoutRequiredInputParams" : "[\"url\"]",
+      "layoutDisplayedInputParams" : "[\"url\",\"http_method\",\"params\",\"exclude_null_parameters\",\"headers\",\"advanced\",\"fail_on_error\",\"verify_ssl\",\"proxies_enabled\"]",
+      "playbookRetryDelayMinutes" : 1,
+      "playbookRetryMaxRetries" : 5
+    }, {
+      "id" : 222741,
+      "appCatalogItem" : {
+        "programName" : "TCPB - JsonPath v1.0",
+        "displayName" : "Json Path",
+        "programVersion" : "2.0.9"
+      },
+      "name" : "Search Status",
+      "jobParameterList" : [ {
+        "appCatalogItemParameter" : {
+          "paramName" : "json_content"
+        },
+        "value" : "#App:222740:http.content!String"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "column_mapping_as_string"
+        },
+        "value" : "[{\"key\":\"isDone\",\"value\":\"$.entry[0].content.isDone\"},{\"key\":\"normalizedSearch\",\"value\":\"$.entry[0].content.normalizedSearch\"},{\"key\":\"eventSearch\",\"value\":\"$.entry[0].content.eventSearch\"},{\"key\":\"runDuration\",\"value\":\"$.entry[0].content.runDuration\"},{\"key\":\"resultcount\",\"value\":\"$.entry[0].content.resultCount\"}]"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "null_missing_leaf"
+        },
+        "value" : "false"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "column_mapping"
+        },
+        "value" : "[]"
+      } ],
+      "locationLeft" : 1360.0,
+      "locationTop" : 700.0,
+      "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"isDone\",\"type\":\"String\"}]"
+    }, {
+      "id" : 222742,
+      "appCatalogItem" : {
+        "programName" : "TCPB - HTTP Client v2.0",
+        "displayName" : "HTTP Client",
+        "programVersion" : "2.0.20"
+      },
+      "name" : "Get Results",
+      "jobParameterList" : [ {
+        "appCatalogItemParameter" : {
+          "paramName" : "multipart"
+        },
+        "value" : "[]"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "urlencode_body"
+        },
+        "value" : "false"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "advanced"
+        },
+        "value" : "[]"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "fail_on_error"
+        },
+        "value" : "false"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "headers"
+        },
+        "value" : "[{\"key\":\"Accept\",\"value\":\"application/json, text/plain, */*\"},{\"key\":\"Content-Type\",\"value\":\"application/json;charset\\u003dutf-8\"},{\"key\":\"Authorization\",\"value\":\"Bearer ${ORGANIZATION:KEYCHAIN:Splunk Authentication Token}\"}]"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "http_method"
+        },
+        "value" : "GET"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "url"
+        },
+        "value" : "${ORGANIZATION:TEXT:Splunk URL}:8089//servicesNS/${ORGANIZATION:TEXT:Splunk User}/TA-threatconnect/search/jobs/#App:222735:splunk.searchID!String/results"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "proxies_enabled"
+        },
+        "value" : "false"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "body"
+        }
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "params"
+        },
+        "value" : "[{\"key\":\"output_mode\",\"value\":\"json\"}]"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "verify_ssl"
+        },
+        "value" : "false"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "exclude_null_parameters"
+        },
+        "value" : "false"
+      } ],
+      "locationLeft" : 1940.0,
+      "locationTop" : 410.0,
+      "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"http.content\",\"type\":\"String\"}]",
+      "layoutRequiredInputParams" : "[\"url\"]",
+      "layoutDisplayedInputParams" : "[\"url\",\"http_method\",\"params\",\"exclude_null_parameters\",\"headers\",\"advanced\",\"fail_on_error\",\"verify_ssl\",\"proxies_enabled\"]",
+      "playbookRetryDelayMinutes" : 1,
+      "playbookRetryMaxRetries" : 5
+    }, {
+      "id" : 222743,
+      "appCatalogItem" : {
+        "programName" : "Break Iterator",
+        "displayName" : "Break Iterator",
+        "programVersion" : "1.0.0"
+      },
+      "name" : "Break Iterator 1",
+      "jobParameterList" : [ ],
+      "locationLeft" : 1760.0,
+      "locationTop" : 670.0
+    }, {
+      "id" : 222744,
+      "appCatalogItem" : {
+        "programName" : "Merge",
+        "displayName" : "Merge",
+        "programVersion" : "1.0.0"
+      },
+      "name" : "Merge Paths",
+      "jobParameterList" : [ {
+        "appCatalogItemParameter" : {
+          "paramName" : "output_array"
+        },
+        "value" : "[]"
+      } ],
+      "locationLeft" : 1760.0,
+      "locationTop" : 760.0
+    }, {
+      "id" : 222745,
+      "appCatalogItem" : {
+        "programName" : "TCPB - HTTP Client v2.0",
+        "displayName" : "HTTP Client",
+        "programVersion" : "2.0.20"
+      },
+      "name" : "Get Search Status",
+      "jobParameterList" : [ {
+        "appCatalogItemParameter" : {
+          "paramName" : "headers"
+        },
+        "value" : "[{\"key\":\"Accept\",\"value\":\"application/json, text/plain, */*\"},{\"key\":\"Content-Type\",\"value\":\"application/json;charset\\u003dutf-8\"},{\"key\":\"Authorization\",\"value\":\"Bearer ${ORGANIZATION:KEYCHAIN:Splunk Authentication Token}\"}]"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "fail_on_error"
+        },
+        "value" : "false"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "params"
+        },
+        "value" : "[{\"key\":\"output_mode\",\"value\":\"json\"}]"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "multipart"
+        },
+        "value" : "[]"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "urlencode_body"
+        },
+        "value" : "false"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "exclude_null_parameters"
+        },
+        "value" : "false"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "http_method"
+        },
+        "value" : "GET"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "url"
+        },
+        "value" : "${ORGANIZATION:TEXT:Splunk URL}:8089/servicesNS/${ORGANIZATION:TEXT:Splunk User}/TA-threatconnect/search/jobs/#App:222735:splunk.searchID!String"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "body"
+        }
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "advanced"
+        },
+        "value" : "[]"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "verify_ssl"
+        },
+        "value" : "false"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "proxies_enabled"
+        },
+        "value" : "false"
+      } ],
+      "locationLeft" : 1520.0,
+      "locationTop" : 410.0,
+      "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"http.content\",\"type\":\"String\"}]",
+      "layoutRequiredInputParams" : "[\"url\"]",
+      "layoutDisplayedInputParams" : "[\"url\",\"http_method\",\"params\",\"exclude_null_parameters\",\"headers\",\"advanced\",\"fail_on_error\",\"verify_ssl\",\"proxies_enabled\"]",
+      "playbookRetryDelayMinutes" : 1,
+      "playbookRetryMaxRetries" : 5
+    }, {
+      "id" : 222746,
+      "appCatalogItem" : {
+        "programName" : "TCPB - JsonPath v1.0",
+        "displayName" : "Json Path",
+        "programVersion" : "2.0.9"
+      },
+      "name" : "Extract Result Meta",
+      "jobParameterList" : [ {
+        "appCatalogItemParameter" : {
+          "paramName" : "null_missing_leaf"
+        },
+        "value" : "false"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "column_mapping_as_string"
+        },
+        "value" : "[{\"key\":\"isDone\",\"value\":\"$.entry[0].content.isDone\"},{\"key\":\"normalizedSearch\",\"value\":\"$.entry[0].content.normalizedSearch\"},{\"key\":\"eventSearch\",\"value\":\"$.entry[0].content.eventSearch\"},{\"key\":\"runDuration\",\"value\":\"$.entry[0].content.runDuration\"},{\"key\":\"resultcount\",\"value\":\"$.entry[0].content.resultCount\"}]"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "json_content"
+        },
+        "value" : "#App:222745:http.content!String"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "column_mapping"
+        },
+        "value" : "[]"
+      } ],
+      "locationLeft" : 1730.0,
+      "locationTop" : 410.0,
+      "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"eventSearch\",\"type\":\"String\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"resultcount\",\"type\":\"String\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"runDuration\",\"type\":\"String\"}]"
+    } ],
+    "playbookConnectionList" : [ {
+      "type" : "Pass",
+      "isCircularOnTarget" : false,
+      "targetJobId" : 222734,
+      "sourceTriggerId" : 17890
+    }, {
+      "type" : "Pass",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 222734,
+      "targetJobId" : 222735
+    }, {
+      "type" : "Pass",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 222735,
+      "targetJobId" : 222736
+    }, {
+      "type" : "Pass",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 222736,
+      "targetJobId" : 222738
+    }, {
+      "type" : "Pass",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 222740,
+      "targetJobId" : 222741
+    }, {
+      "type" : "Pass",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 222741,
+      "targetJobId" : 222737
+    }, {
+      "type" : "EndLoop",
+      "isCircularOnTarget" : true,
+      "sourceJobId" : 222744,
+      "targetJobId" : 222738
+    }, {
+      "type" : "Pass",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 222737,
+      "targetJobId" : 222743
+    }, {
+      "type" : "Pass",
+      "isCircularOnTarget" : true,
+      "sourceJobId" : 222742,
+      "targetTriggerId" : 17890
+    }, {
+      "type" : "Pass",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 222738,
+      "targetJobId" : 222745
+    }, {
+      "type" : "Pass",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 222745,
+      "targetJobId" : 222746
+    }, {
+      "type" : "Pass",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 222746,
+      "targetJobId" : 222742
+    }, {
+      "type" : "Fail",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 222737,
+      "targetJobId" : 222744
+    }, {
+      "type" : "StartLoop",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 222738,
+      "targetJobId" : 222739
+    }, {
+      "type" : "Pass",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 222739,
+      "targetJobId" : 222740
+    } ],
+    "playbookTriggerList" : [ {
+      "id" : 17890,
+      "name" : "Component Trigger",
+      "type" : "PipeConfig",
+      "eventType" : "External",
+      "locationLeft" : 1330.0,
+      "locationTop" : 280.0,
+      "anyOrg" : true,
+      "playbookTriggerFilterList" : [ ],
+      "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"delay\",\"type\":\"String\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"splunkSearch\",\"type\":\"String\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"repeat\",\"type\":\"String\"}]",
+      "pipeInputParams" : "[{\"uiHidden\":false,\"label\":\"Delay\",\"dataType\":\"String\",\"playbookDataType\":\"String\",\"required\":true,\"name\":\"delay\",\"encrypted\":false,\"hidden\":false,\"hasDollarVariables\":false,\"playbookVariable\":false,\"validValuesList\":[]},{\"uiHidden\":false,\"label\":\"Repeat\",\"dataType\":\"String\",\"playbookDataType\":\"String\",\"required\":true,\"name\":\"repeat\",\"encrypted\":false,\"hidden\":false,\"hasDollarVariables\":false,\"playbookVariable\":false,\"validValuesList\":[]},{\"uiHidden\":false,\"label\":\"Duration\",\"dataType\":\"String\",\"playbookDataType\":\"String\",\"required\":true,\"name\":\"duration\",\"encrypted\":false,\"hidden\":false,\"hasDollarVariables\":false,\"playbookVariable\":false,\"validValuesList\":[\"${TEXT}\"]},{\"uiHidden\":false,\"label\":\"Search\",\"dataType\":\"String\",\"playbookDataType\":\"String\",\"required\":true,\"name\":\"splunkSearch\",\"encrypted\":false,\"hidden\":false,\"hasDollarVariables\":false,\"playbookVariable\":false,\"validValuesList\":[\"${TEXT}\"]}]",
+      "pipeOutputParams" : "[{\"key\":\"splunk.searchID\",\"value\":\"#App:222735:splunk.searchID!String\",\"displayValue\":\"#App:222735:splunk.searchID!String\"},{\"key\":\"splunk.search.status_code\",\"value\":\"#App:222734:http.status_code!String\",\"displayValue\":\"#App:222734:http.status_code!String\"},{\"key\":\"splunk.search.response.result\",\"value\":\"#App:222742:http.content!String \",\"displayValue\":\"#App:222742:http.content!String \"},{\"key\":\"resultCount\",\"value\":\"#App:222746:resultcount!String \",\"displayValue\":\"#App:222746:resultcount!String \"},{\"key\":\"runDuration\",\"value\":\"#App:222746:runDuration!String \",\"displayValue\":\"#App:222746:runDuration!String \"},{\"key\":\"eventSearch\",\"value\":\"#App:222746:eventSearch!String \",\"displayValue\":\"#App:222746:eventSearch!String \"}]"
+    } ],
+    "playbookLabels" : [ {
+      "playbookLabelType" : {
+        "label" : "SIEM"
+      }
+    }, {
+      "playbookLabelType" : {
+        "label" : "Splunk"
+      }
+    } ]
+  }, {
+    "definitionVersion" : "94731ba01aa5e84f785c9de6b3423f16",
+    "name" : "Tactical Intelligence",
+    "type" : "Pipe",
+    "panX" : 806.0,
+    "panY" : -185.0,
+    "logLevel" : "WARN",
+    "description" : "This playbook will search QRadar for indicators and return statistical resutls",
+    "priority" : 6,
+    "version" : "1.184",
+    "comment" : "Auto-Saved on Mon Mar 08 15:58:42 UTC 2021",
+    "jobList" : [ {
+      "id" : 210506,
+      "appCatalogItem" : {
+        "programName" : "TCPB - JMESPath v3.0",
+        "displayName" : "JMESPath",
+        "programVersion" : "3.0.0"
+      },
+      "name" : "Extract Details",
+      "jobParameterList" : [ {
+        "appCatalogItemParameter" : {
+          "paramName" : "string_array_expressions"
+        },
+        "value" : "[]"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "json_data"
+        },
+        "value" : "#Trigger:16949:Entity!TCEntity"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "string_expressions"
+        },
+        "value" : "[{\"key\":\"id\",\"value\":\"id\"},{\"key\":\"type\",\"value\":\"type\"},{\"key\":\"value\",\"value\":\"value\"},{\"key\":\"ownerName\",\"value\":\"ownerName\"},{\"key\":\"dateAdded\",\"value\":\"dateAdded\"},{\"key\":\"webLink\",\"value\":\"webLink\"}]"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "strip_quotes"
+        },
+        "value" : "true"
+      } ],
+      "locationLeft" : -1070.0,
+      "locationTop" : 460.0,
+      "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"webLink\",\"type\":\"String\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"type\",\"type\":\"String\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"dateAdded\",\"type\":\"String\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"value\",\"type\":\"String\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"ownerName\",\"type\":\"String\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"id\",\"type\":\"String\"}]"
+    }, {
+      "id" : 210507,
+      "appCatalogItem" : {
+        "programName" : "TCPB - TC Api v1.0",
+        "displayName" : "ThreatConnect API",
+        "programVersion" : "1.0.8"
+      },
+      "name" : "Find Associated Indicators",
+      "jobParameterList" : [ {
+        "appCatalogItemParameter" : {
+          "paramName" : "query_params"
+        },
+        "value" : "[{\"key\":\"resultStart\",\"value\":\"0\"},{\"key\":\"resultLimit\",\"value\":\"1000\"}]"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "headers"
+        },
+        "value" : "[]"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "method"
+        },
+        "value" : "GET"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "body"
+        }
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "path"
+        },
+        "value" : "/v2/groups/#App:210511:type!String/#App:210506:id!String/indicators"
+      } ],
+      "locationLeft" : -300.0,
+      "locationTop" : 460.0,
+      "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"tc.api.result\",\"type\":\"String\"}]"
+    }, {
+      "id" : 210508,
+      "appCatalogItem" : {
+        "programName" : "TCPB - JMESPath v3.0",
+        "displayName" : "JMESPath",
+        "programVersion" : "3.0.0"
+      },
+      "name" : "Extract indicators",
+      "jobParameterList" : [ {
+        "appCatalogItemParameter" : {
+          "paramName" : "string_expressions"
+        },
+        "value" : "[{\"key\":\"resultCount\",\"value\":\"data.resultCount\"}]"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "json_data"
+        },
+        "value" : "#App:210507:tc.api.result!String"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "string_array_expressions"
+        },
+        "value" : "[{\"key\":\"indicators\",\"value\":\"data.indicator[].summary\"},{\"key\":\"Address\",\"value\":\"data.indicator[?type \\u003d\\u003d \\u0027Address\\u0027].summary\"},{\"key\":\"EmailAddress\",\"value\":\"data.indicator[?type \\u003d\\u003d \\u0027EmailAddress\\u0027].summary\"},{\"key\":\"File\",\"value\":\"data.indicator[?type \\u003d\\u003d \\u0027File\\u0027].summary\"},{\"key\":\"Host\",\"value\":\"data.indicator[?type \\u003d\\u003d \\u0027Host\\u0027].summary\"},{\"key\":\"URL\",\"value\":\"data.indicator[?type \\u003d\\u003d \\u0027URL\\u0027].summary\"},{\"key\":\"ASN\",\"value\":\"data.indicator[?type \\u003d\\u003d \\u0027ASN\\u0027].summary\"},{\"key\":\"CIDR\",\"value\":\"data.indicator[?type \\u003d\\u003d \\u0027CIDR\\u0027].summary\"},{\"key\":\"Mutex\",\"value\":\"data.indicator[?type \\u003d\\u003d \\u0027Mutex\\u0027].summary\"},{\"key\":\"RegistryKey\",\"value\":\"data.indicator[?type \\u003d\\u003d \\u0027Registry Key\\u0027].summary\"},{\"key\":\"UserAgent\",\"value\":\"data.indicator[?type \\u003d\\u003d \\u0027User Agent\\u0027].summary\"}]"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "strip_quotes"
+        },
+        "value" : "true"
+      } ],
+      "locationLeft" : -80.0,
+      "locationTop" : 460.0,
+      "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"UserAgent\",\"type\":\"StringArray\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"EmailAddress\",\"type\":\"StringArray\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"ASN\",\"type\":\"StringArray\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"CIDR\",\"type\":\"StringArray\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"URL\",\"type\":\"StringArray\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"File\",\"type\":\"StringArray\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"Host\",\"type\":\"StringArray\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"indicators\",\"type\":\"StringArray\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"Mutex\",\"type\":\"StringArray\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"Address\",\"type\":\"StringArray\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"RegistryKey\",\"type\":\"StringArray\"},{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"resultCount\",\"type\":\"String\"}]"
+    }, {
+      "id" : 210509,
+      "appCatalogItem" : {
+        "programName" : "If / Else",
+        "displayName" : "If / Else",
+        "programVersion" : "1.0.0"
+      },
+      "name" : "Threat",
+      "jobParameterList" : [ {
+        "appCatalogItemParameter" : {
+          "paramName" : "as_numeric"
+        },
+        "value" : "false"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "operator"
+        },
+        "value" : "equals"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "operand_1"
+        },
+        "value" : "#App:210506:type!String"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "operand_2"
+        },
+        "value" : "Threat"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "match_case"
+        },
+        "value" : "false"
+      } ],
+      "locationLeft" : -860.0,
+      "locationTop" : 1180.0
+    }, {
+      "id" : 210510,
+      "appCatalogItem" : {
+        "programName" : "TCPB - SetVariable v1.0",
+        "displayName" : "Set Variable",
+        "programVersion" : "1.0.14"
+      },
+      "name" : "Threats",
+      "jobParameterList" : [ {
+        "appCatalogItemParameter" : {
+          "paramName" : "variable_mapping"
+        },
+        "value" : "[{\"key\":\"type\",\"value\":\"threats\"},{\"key\":\"version\",\"value\":\"14.0\"}]"
+      } ],
+      "locationLeft" : -690.0,
+      "locationTop" : 1170.0,
+      "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"type\",\"type\":\"String\"}]"
+    }, {
+      "id" : 210511,
+      "appCatalogItem" : {
+        "programName" : "Merge",
+        "displayName" : "Merge",
+        "programVersion" : "1.0.0"
+      },
+      "name" : "Merge Type",
+      "jobParameterList" : [ {
+        "appCatalogItemParameter" : {
+          "paramName" : "output_array"
+        },
+        "value" : "[{\"key\":\"type\",\"value\":\"#App:210516:type!String #App:210525:type!String #App:210519:type!String #App:210518:type!String #App:210513:type!String #App:210521:type!String #App:210523:type!String #App:210510:type!String\"}]"
+      } ],
+      "locationLeft" : -450.0,
+      "locationTop" : 460.0,
+      "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"type\",\"type\":\"String\"}]"
+    }, {
+      "id" : 210512,
+      "appCatalogItem" : {
+        "programName" : "If / Else",
+        "displayName" : "If / Else",
+        "programVersion" : "1.0.0"
+      },
+      "name" : "Incident",
+      "jobParameterList" : [ {
+        "appCatalogItemParameter" : {
+          "paramName" : "operator"
+        },
+        "value" : "equals"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "operand_1"
+        },
+        "value" : "#App:210506:type!String"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "match_case"
+        },
+        "value" : "false"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "as_numeric"
+        },
+        "value" : "false"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "operand_2"
+        },
+        "value" : "Incident"
+      } ],
+      "locationLeft" : -820.0,
+      "locationTop" : 870.0
+    }, {
+      "id" : 210513,
+      "appCatalogItem" : {
+        "programName" : "TCPB - SetVariable v1.0",
+        "displayName" : "Set Variable",
+        "programVersion" : "1.0.14"
+      },
+      "name" : "Incidents",
+      "jobParameterList" : [ {
+        "appCatalogItemParameter" : {
+          "paramName" : "variable_mapping"
+        },
+        "value" : "[{\"key\":\"version\",\"value\":\"14.0\"},{\"key\":\"type\",\"value\":\"incidents\"}]"
+      } ],
+      "locationLeft" : -690.0,
+      "locationTop" : 870.0,
+      "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"type\",\"type\":\"String\"}]"
+    }, {
+      "id" : 210514,
+      "appCatalogItem" : {
+        "programName" : "If / Else",
+        "displayName" : "If / Else",
+        "programVersion" : "1.0.0"
+      },
+      "name" : "Document",
+      "jobParameterList" : [ {
+        "appCatalogItemParameter" : {
+          "paramName" : "operator"
+        },
+        "value" : "equals"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "operand_1"
+        },
+        "value" : "#App:210506:type!String"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "as_numeric"
+        },
+        "value" : "false"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "operand_2"
+        },
+        "value" : "Document"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "match_case"
+        },
+        "value" : "false"
+      } ],
+      "locationLeft" : -820.0,
+      "locationTop" : 650.0
+    }, {
+      "id" : 210515,
+      "appCatalogItem" : {
+        "programName" : "If / Else",
+        "displayName" : "If / Else",
+        "programVersion" : "1.0.0"
+      },
+      "name" : "Adversary",
+      "jobParameterList" : [ {
+        "appCatalogItemParameter" : {
+          "paramName" : "operator"
+        },
+        "value" : "equals"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "operand_2"
+        },
+        "value" : "Adversary"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "match_case"
+        },
+        "value" : "false"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "operand_1"
+        },
+        "value" : "#App:210506:type!String"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "as_numeric"
+        },
+        "value" : "false"
+      } ],
+      "locationLeft" : -830.0,
+      "locationTop" : 450.0
+    }, {
+      "id" : 210516,
+      "appCatalogItem" : {
+        "programName" : "TCPB - SetVariable v1.0",
+        "displayName" : "Set Variable",
+        "programVersion" : "1.0.14"
+      },
+      "name" : "Adversaries",
+      "jobParameterList" : [ {
+        "appCatalogItemParameter" : {
+          "paramName" : "variable_mapping"
+        },
+        "value" : "[{\"key\":\"version\",\"value\":\"14.0\"},{\"key\":\"type\",\"value\":\"adversaries\"}]"
+      } ],
+      "locationLeft" : -690.0,
+      "locationTop" : 460.0,
+      "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"type\",\"type\":\"String\"}]"
+    }, {
+      "id" : 210517,
+      "appCatalogItem" : {
+        "programName" : "If / Else",
+        "displayName" : "If / Else",
+        "programVersion" : "1.0.0"
+      },
+      "name" : "Email",
+      "jobParameterList" : [ {
+        "appCatalogItemParameter" : {
+          "paramName" : "operand_1"
+        },
+        "value" : "#App:210506:type!String"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "operator"
+        },
+        "value" : "equals"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "operand_2"
+        },
+        "value" : "Email"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "as_numeric"
+        },
+        "value" : "false"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "match_case"
+        },
+        "value" : "false"
+      } ],
+      "locationLeft" : -860.0,
+      "locationTop" : 760.0
+    }, {
+      "id" : 210518,
+      "appCatalogItem" : {
+        "programName" : "TCPB - SetVariable v1.0",
+        "displayName" : "Set Variable",
+        "programVersion" : "1.0.14"
+      },
+      "name" : "Emails",
+      "jobParameterList" : [ {
+        "appCatalogItemParameter" : {
+          "paramName" : "variable_mapping"
+        },
+        "value" : "[{\"key\":\"version\",\"value\":\"14.0\"},{\"key\":\"type\",\"value\":\"emails\"}]"
+      } ],
+      "locationLeft" : -690.0,
+      "locationTop" : 770.0,
+      "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"type\",\"type\":\"String\"}]"
+    }, {
+      "id" : 210519,
+      "appCatalogItem" : {
+        "programName" : "TCPB - SetVariable v1.0",
+        "displayName" : "Set Variable",
+        "programVersion" : "1.0.14"
+      },
+      "name" : "Documents",
+      "jobParameterList" : [ {
+        "appCatalogItemParameter" : {
+          "paramName" : "variable_mapping"
+        },
+        "value" : "[{\"key\":\"version\",\"value\":\"14.0\"},{\"key\":\"type\",\"value\":\"documents\"}]"
+      } ],
+      "locationLeft" : -690.0,
+      "locationTop" : 670.0,
+      "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"type\",\"type\":\"String\"}]"
+    }, {
+      "id" : 210520,
+      "appCatalogItem" : {
+        "programName" : "If / Else",
+        "displayName" : "If / Else",
+        "programVersion" : "1.0.0"
+      },
+      "name" : "Report",
+      "jobParameterList" : [ {
+        "appCatalogItemParameter" : {
+          "paramName" : "operator"
+        },
+        "value" : "equals"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "match_case"
+        },
+        "value" : "false"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "as_numeric"
+        },
+        "value" : "false"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "operand_1"
+        },
+        "value" : "#App:210506:type!String"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "operand_2"
+        },
+        "value" : "Report"
+      } ],
+      "locationLeft" : -860.0,
+      "locationTop" : 970.0
+    }, {
+      "id" : 210521,
+      "appCatalogItem" : {
+        "programName" : "TCPB - SetVariable v1.0",
+        "displayName" : "Set Variable",
+        "programVersion" : "1.0.14"
+      },
+      "name" : "Reports",
+      "jobParameterList" : [ {
+        "appCatalogItemParameter" : {
+          "paramName" : "variable_mapping"
+        },
+        "value" : "[{\"key\":\"version\",\"value\":\"14.0\"},{\"key\":\"type\",\"value\":\"reports\"}]"
+      } ],
+      "locationLeft" : -690.0,
+      "locationTop" : 970.0,
+      "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"type\",\"type\":\"String\"}]"
+    }, {
+      "id" : 210522,
+      "appCatalogItem" : {
+        "programName" : "If / Else",
+        "displayName" : "If / Else",
+        "programVersion" : "1.0.0"
+      },
+      "name" : "Signature",
+      "jobParameterList" : [ {
+        "appCatalogItemParameter" : {
+          "paramName" : "operand_1"
+        },
+        "value" : "#App:210506:type!String"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "match_case"
+        },
+        "value" : "false"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "operator"
+        },
+        "value" : "equals"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "as_numeric"
+        },
+        "value" : "false"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "operand_2"
+        },
+        "value" : "Signature"
+      } ],
+      "locationLeft" : -820.0,
+      "locationTop" : 1080.0
+    }, {
+      "id" : 210523,
+      "appCatalogItem" : {
+        "programName" : "TCPB - SetVariable v1.0",
+        "displayName" : "Set Variable",
+        "programVersion" : "1.0.14"
+      },
+      "name" : "Signatures",
+      "jobParameterList" : [ {
+        "appCatalogItemParameter" : {
+          "paramName" : "variable_mapping"
+        },
+        "value" : "[{\"key\":\"version\",\"value\":\"14.0\"},{\"key\":\"type\",\"value\":\"signatures\"}]"
+      } ],
+      "locationLeft" : -690.0,
+      "locationTop" : 1070.0,
+      "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"type\",\"type\":\"String\"}]"
+    }, {
+      "id" : 210524,
+      "appCatalogItem" : {
+        "programName" : "If / Else",
+        "displayName" : "If / Else",
+        "programVersion" : "1.0.0"
+      },
+      "name" : "Campaign",
+      "jobParameterList" : [ {
+        "appCatalogItemParameter" : {
+          "paramName" : "as_numeric"
+        },
+        "value" : "false"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "operator"
+        },
+        "value" : "equals"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "operand_1"
+        },
+        "value" : "#App:210506:type!String"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "operand_2"
+        },
+        "value" : "Campaign"
+      }, {
+        "appCatalogItemParameter" : {
+          "paramName" : "match_case"
+        },
+        "value" : "false"
+      } ],
+      "locationLeft" : -860.0,
+      "locationTop" : 550.0
+    }, {
+      "id" : 210525,
+      "appCatalogItem" : {
+        "programName" : "TCPB - SetVariable v1.0",
+        "displayName" : "Set Variable",
+        "programVersion" : "1.0.14"
+      },
+      "name" : "Campaigns",
+      "jobParameterList" : [ {
+        "appCatalogItemParameter" : {
+          "paramName" : "variable_mapping"
+        },
+        "value" : "[{\"key\":\"version\",\"value\":\"14.0\"},{\"key\":\"type\",\"value\":\"campaigns\"}]"
+      } ],
+      "locationLeft" : -690.0,
+      "locationTop" : 560.0,
+      "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"type\",\"type\":\"String\"}]"
+    } ],
+    "playbookConnectionList" : [ {
+      "type" : "Pass",
+      "isCircularOnTarget" : false,
+      "targetJobId" : 210506,
+      "sourceTriggerId" : 16949
+    }, {
+      "type" : "Pass",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 210507,
+      "targetJobId" : 210508
+    }, {
+      "type" : "Pass",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 210512,
+      "targetJobId" : 210513
+    }, {
+      "type" : "Pass",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 210511,
+      "targetJobId" : 210507
+    }, {
+      "type" : "Pass",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 210509,
+      "targetJobId" : 210510
+    }, {
+      "type" : "Pass",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 210506,
+      "targetJobId" : 210515
+    }, {
+      "type" : "Pass",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 210515,
+      "targetJobId" : 210516
+    }, {
+      "type" : "Pass",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 210517,
+      "targetJobId" : 210518
+    }, {
+      "type" : "Pass",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 210514,
+      "targetJobId" : 210519
+    }, {
+      "type" : "Fail",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 210514,
+      "targetJobId" : 210517
+    }, {
+      "type" : "Fail",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 210517,
+      "targetJobId" : 210512
+    }, {
+      "type" : "Fail",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 210512,
+      "targetJobId" : 210520
+    }, {
+      "type" : "Pass",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 210520,
+      "targetJobId" : 210521
+    }, {
+      "type" : "Fail",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 210520,
+      "targetJobId" : 210522
+    }, {
+      "type" : "Pass",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 210522,
+      "targetJobId" : 210523
+    }, {
+      "type" : "Fail",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 210522,
+      "targetJobId" : 210509
+    }, {
+      "type" : "Pass",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 210521,
+      "targetJobId" : 210511
+    }, {
+      "type" : "Pass",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 210523,
+      "targetJobId" : 210511
+    }, {
+      "type" : "Pass",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 210519,
+      "targetJobId" : 210511
+    }, {
+      "type" : "Pass",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 210516,
+      "targetJobId" : 210511
+    }, {
+      "type" : "Pass",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 210510,
+      "targetJobId" : 210511
+    }, {
+      "type" : "Pass",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 210518,
+      "targetJobId" : 210511
+    }, {
+      "type" : "Pass",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 210513,
+      "targetJobId" : 210511
+    }, {
+      "type" : "Fail",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 210515,
+      "targetJobId" : 210524
+    }, {
+      "type" : "Pass",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 210524,
+      "targetJobId" : 210525
+    }, {
+      "type" : "Fail",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 210524,
+      "targetJobId" : 210514
+    }, {
+      "type" : "Pass",
+      "isCircularOnTarget" : false,
+      "sourceJobId" : 210525,
+      "targetJobId" : 210511
+    }, {
+      "type" : "Pass",
+      "isCircularOnTarget" : true,
+      "sourceJobId" : 210508,
+      "targetTriggerId" : 16949
+    } ],
+    "playbookTriggerList" : [ {
+      "id" : 16949,
+      "name" : "Component Trigger",
+      "type" : "PipeConfig",
+      "eventType" : "External",
+      "locationLeft" : -580.0,
+      "locationTop" : 230.0,
+      "anyOrg" : true,
+      "playbookTriggerFilterList" : [ ],
+      "outputVariables" : "[{\"sourceInputList\":[],\"loopVariables\":false,\"name\":\"Entity\",\"type\":\"TCEntity\"}]",
+      "pipeInputParams" : "[{\"uiHidden\":false,\"label\":\"Entity\",\"dataType\":\"String\",\"playbookDataType\":\"TCEntity\",\"required\":true,\"name\":\"Entity\",\"encrypted\":false,\"hidden\":false,\"hasDollarVariables\":false,\"playbookVariable\":false,\"validValuesList\":[\"${TEXT}\"]}]",
+      "pipeOutputParams" : "[{\"key\":\"count\",\"value\":\"#App:210508:resultCount!String \",\"displayValue\":\"#App:210508:resultCount!String \"},{\"key\":\"indicators\",\"value\":\"#App:210508:indicators!StringArray \",\"displayValue\":\"#App:210508:indicators!StringArray \"},{\"key\":\"type\",\"value\":\"#App:210506:type!String \",\"displayValue\":\"#App:210506:type!String \"},{\"key\":\"value\",\"value\":\"#App:210506:value!String \",\"displayValue\":\"#App:210506:value!String \"},{\"key\":\"owner\",\"value\":\"#App:210506:ownerName!String \",\"displayValue\":\"#App:210506:ownerName!String \"},{\"key\":\"dateAddedd\",\"value\":\"#App:210506:dateAdded!String \",\"displayValue\":\"#App:210506:dateAdded!String \"},{\"key\":\"weblink\",\"value\":\"#App:210506:webLink!String \",\"displayValue\":\"#App:210506:webLink!String \"},{\"key\":\"Address\",\"value\":\"#App:210508:Address!StringArray \",\"displayValue\":\"#App:210508:Address!StringArray \"},{\"key\":\"EmailAddress\",\"value\":\"#App:210508:EmailAddress!StringArray \",\"displayValue\":\"#App:210508:EmailAddress!StringArray \"},{\"key\":\"File\",\"value\":\"#App:210508:File!StringArray \",\"displayValue\":\"#App:210508:File!StringArray \"},{\"key\":\"Host\",\"value\":\"#App:210508:Host!StringArray \",\"displayValue\":\"#App:210508:Host!StringArray \"},{\"key\":\"URL\",\"value\":\"#App:210508:URL!StringArray \",\"displayValue\":\"#App:210508:URL!StringArray \"},{\"key\":\"ASN\",\"value\":\"#App:210508:ASN!StringArray \",\"displayValue\":\"#App:210508:ASN!StringArray \"},{\"key\":\"CIDR\",\"value\":\"#App:210508:CIDR!StringArray \",\"displayValue\":\"#App:210508:CIDR!StringArray \"},{\"key\":\"Mutex\",\"value\":\"#App:210508:Mutex!StringArray \",\"displayValue\":\"#App:210508:Mutex!StringArray \"},{\"key\":\"RegistryKey\",\"value\":\"#App:210508:RegistryKey!StringArray \",\"displayValue\":\"#App:210508:RegistryKey!StringArray \"},{\"key\":\"UserAgent\",\"value\":\"#App:210508:UserAgent!StringArray \",\"displayValue\":\"#App:210508:UserAgent!StringArray \"}]"
+    } ],
+    "playbookLabels" : [ ]
+  } ]
+}
