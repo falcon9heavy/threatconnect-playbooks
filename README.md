@@ -1,2 +1,2 @@
 # threatconnect-playbooks
-playbooks that run on threatconnect platform
+threat hunting playbooks written to integrate with splunk and qradar 
