@@ -1,0 +1,64 @@
+Write up a breakdown on the differences between searching splunk and qradar in terms of
+a playbook writing pattern for homework...
+
+Pseudocode Playbook
+
+User action trigger - manual kick off
+  Adversary or Campaign object
+
+Immediately find all related IOCs and merge into list
+
+Get the IOCs within entity/list
+
+Get all of the details on each indicator:
+{ "id" : #id , "name" : "#value ", "type" : "#type ", "owner" : "#trg.action.owner ", "threat" : "#trg.action.rating ",
+"confidence" : "#trg.action.confidence ", "weblink" : "#webLink ", "address" : #Address , "emailAddress" : #EmailAddress ,
+"file" : #File , "host" : #Host , "url" : #URL , "asn" : #ASN , "cidr" : #CIDR , "mutex" : #Mutex ,
+"registryKey" : #RegistryKey , "userAgent" : #UserAgent  }
+
+
+Set up variable for splunk
+
+collectionName: investigate
+macroSerach: invesigate(1d:id)
+numberOfResults:10
+collection:TA-threatconnect
+
+Check Collection uysing HTTP client
+$Splunk URL :8089/servicesNS/nobody/#collection /storage/collections/config/#collectionName
+
+Header KV
+Authorization: Bearer $Splunk AuthN token
+
+Look for 200 http.status_code
+
+if not, post to create a lookup
+$Splunk URL :8089/servicesNS/nobody/#collection /storage/collections/confi
+
+Now add a record using HTTPclient
+SplunkURL :8089/servicesNS/nobody/#collection /storage/collections/data/#collectionName
+
+
+Call splunk investigate component giving
+delay:10
+repeat:100
+duration:4h
+Search: macrosearch (VAR)
+
+---->>> component works
+
+  HTTP client :$Splunk URL :8089/servicesNS/$Splunk User /TA-threatconnect/search/jobs
+  AuthN: Bearer
+  Accept: app/json
+  ContentTypeL app/json
+  Body search=search #splunkSearch
+
+  JMES get back http content then parse out splunk.searchID: sid
+  iterate through all the numberOfResults$
+  Splunk URL :8089/servicesNS/$Splunk User /TA-threatconnect/search/jobs
+  monitor search status for errors
+
+  Splunk :8089/servicesNS/$Splunk User /TA-threatconnect/search/jobs/#splunk.searchID
+
+  Get the results from the jobs
+  $Splunk URL :8089//servicesNS/$Splunk User /TA-threatconnect/search/jobs/#splunk.searchID /results
